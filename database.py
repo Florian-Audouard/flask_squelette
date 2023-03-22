@@ -8,7 +8,6 @@ import urllib.parse
 import psycopg
 
 from dotenv import dotenv_values
-from tqdm import tqdm
 
 os.chdir(os.path.dirname(__file__))
 
