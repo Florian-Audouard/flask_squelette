@@ -9,7 +9,6 @@ fetch("/getImg")
 	});
 fetch("/getVideo")
 	.then((res) => {
-		console.log("ouep2");
 		return res.json();
 	})
 	.then((data) => {
@@ -17,5 +16,17 @@ fetch("/getVideo")
 		const source = document.createElement("source");
 		source.type = `video/${data.type}`;
 		source.src = `data:video/${data.type};base64, ${data.video_data}`;
+		containeur.appendChild(source);
+	});
+fetch("/getMusic")
+	.then((res) => {
+		console.log(res);
+		return res.json();
+	})
+	.then((data) => {
+		const containeur = document.querySelector("#music_conteneur");
+		const source = document.createElement("source");
+		source.type = `audio/${data.type}`;
+		source.src = `data:audio/${data.type};base64, ${data.music_data}`;
 		containeur.appendChild(source);
 	});

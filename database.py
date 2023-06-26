@@ -67,11 +67,29 @@ def get_video():  # pylint: disable=missing-function-docstring
             return (video_title, video_data, video_type)
 
 
+def get_music():  # pylint: disable=missing-function-docstring
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute("select music_title,music_data,music_type from music_data;")
+            music_title, music_data, music_type = cur.fetchone()
+            music_data = music_data.decode("utf-8")
+            return (music_title, music_data, music_type)
+
+
 def add_img(title, data, type):
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO img_data (img_title,img_data,img_type) VALUES (%(title)s,%(byte)s,%(type)s)",
+                {"title": title, "byte": data, "type": type},
+            )
+
+
+def add_music(title, data, type):
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO music_data (music_title,music_data,music_type) VALUES (%(title)s,%(byte)s,%(type)s)",
                 {"title": title, "byte": data, "type": type},
             )
 
@@ -96,3 +114,6 @@ if __name__ == "__main__":
             with open("media/Rick_Roll.mp4", "rb") as f:
                 video_data = base64.b64encode(f.read())
                 add_video("RickRoll", video_data, "mp4")
+            with open("media/music.mp3", "rb") as f:
+                video_data = base64.b64encode(f.read())
+                add_music("music", video_data, "mp3")
