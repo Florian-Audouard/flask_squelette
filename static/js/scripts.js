@@ -9,10 +9,10 @@ fetch("/getImg")
 	});
 fetch("/getVideo")
 	.then((res) => {
+		console.log("ouep2");
 		return res.json();
 	})
 	.then((data) => {
-		console.log("ouep");
 		const containeur = document.querySelector("#video_conteneur");
 		const source = document.createElement("source");
 		source.type = `video/${data.type}`;
