@@ -16,7 +16,7 @@ default_look_filename = ".env"
 if __name__ == "__main__":
     import sys
 
-    if sys.argv[0] == "--site" or sys.argv[1] == "--site":
+    if len(sys.argv) > 1 and (sys.argv[0] == "--site" or sys.argv[1] == "--site"):
         default_look_filename = "site.env"
 
 if os.path.exists(default_look_filename):
@@ -52,10 +52,10 @@ def get_data():  # pylint: disable=missing-function-docstring
 def get_img():  # pylint: disable=missing-function-docstring
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
-            cur.execute("select title,img_data from img_data;")
-            title, img_data = cur.fetchone()
+            cur.execute("select img_title,img_data,img_type from img_data;")
+            img_title, img_data, img_type = cur.fetchone()
             img_data = img_data.decode("utf-8")
-            return (title, img_data)
+            return (img_title, img_data, img_type)
 
 
 if __name__ == "__main__":
@@ -65,6 +65,6 @@ if __name__ == "__main__":
             # Insert an image into the table
             image_data = base64.b64encode(open("media/voiture.jpg", "rb").read())
             cur.execute(
-                "INSERT INTO img_data (title,img_data) VALUES (%(title)s,%(byte)s)",
-                {"title": "voiture", "byte": image_data},
+                "INSERT INTO img_data (img_title,img_data,img_type) VALUES (%(title)s,%(byte)s,%(type)s)",
+                {"title": "voiture", "byte": image_data, "type": "jpg"},
             )
