@@ -8,12 +8,10 @@ import urllib.parse
 import psycopg
 import base64
 from dotenv import dotenv_values
-import sys
 
 os.chdir(os.path.dirname(__file__))
-if sys.argv[1] == "--site" or sys.argv[0] == "--site":
-    config = dotenv_values("site.env")
-elif os.path.exists(".env"):
+
+if os.path.exists(".env"):
     config = dotenv_values(".env")
 else:
     config = {
