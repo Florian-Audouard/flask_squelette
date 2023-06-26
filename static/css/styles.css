@@ -1,4 +1,7 @@
+*{
+    background-color:#303030;
+    color: white;
+}
 #testDatabase{
     font-size: 30px;
-    color:darkgray
 }
