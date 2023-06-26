@@ -58,13 +58,41 @@ def get_img():  # pylint: disable=missing-function-docstring
             return (img_title, img_data, img_type)
 
 
+def get_video():  # pylint: disable=missing-function-docstring
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute("select video_title,video_data,video_type from video_data;")
+            video_title, video_data, video_type = cur.fetchone()
+            video_data = video_data.decode("utf-8")
+            return (video_title, video_data, video_type)
+
+
+def add_img(title, data, type):
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO img_data (img_title,img_data,img_type) VALUES (%(title)s,%(byte)s,%(type)s)",
+                {"title": title, "byte": data, "type": type},
+            )
+
+
+def add_video(title, data, type):
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO video_data (video_title,video_data,video_type) VALUES (%(title)s,%(byte)s,%(type)s)",
+                {"title": title, "byte": data, "type": type},
+            )
+
+
 if __name__ == "__main__":
     reset_table()
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             # Insert an image into the table
-            image_data = base64.b64encode(open("media/voiture.jpg", "rb").read())
-            cur.execute(
-                "INSERT INTO img_data (img_title,img_data,img_type) VALUES (%(title)s,%(byte)s,%(type)s)",
-                {"title": "voiture", "byte": image_data, "type": "jpg"},
-            )
+            with open("media/voiture.jpg", "rb") as f:
+                image_data = base64.b64encode(f.read())
+                add_img("voiture", image_data, "jpg")
+            with open("media/Rick_Roll.mp4", "rb") as f:
+                video_data = base64.b64encode(f.read())
+                add_video("RickRoll", video_data, "mp4")

@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify, render_template
-from database import reset_table, get_data, get_img
+from database import reset_table, get_data, get_img, get_video
 
 os.chdir(os.path.dirname(__file__))
 
@@ -22,6 +22,13 @@ def get_database():  # pylint: disable=missing-function-docstring
 def get_img_route():  # pylint: disable=missing-function-docstring
     title, img_data, type = get_img()
     res = {"title": title, "img_data": img_data, "type": type}
+    return res
+
+
+@app.route("/getVideo", methods=["GET"])
+def get_video_route():  # pylint: disable=missing-function-docstring
+    title, video_data, type = get_video()
+    res = {"title": title, "video_data": video_data, "type": type}
     return res
 
 
