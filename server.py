@@ -1,13 +1,11 @@
 import os
 from flask import Flask, jsonify, render_template
-from database import reset_table, get_data
+from database import reset_table, get_data, get_img
 
 os.chdir(os.path.dirname(__file__))
 
 
 app = Flask(__name__)
-
-# reset_table()
 
 
 @app.route("/")
@@ -15,9 +13,16 @@ def index():  # pylint: disable=missing-function-docstring
     return render_template("index.html")
 
 
-# @app.route("/getDatabase", methods=["GET"])
-# def get_database():  # pylint: disable=missing-function-docstring
-#     return jsonify(get_data())
+@app.route("/getDatabase", methods=["GET"])
+def get_database():  # pylint: disable=missing-function-docstring
+    return jsonify(get_data())
+
+
+@app.route("/getImg", methods=["GET"])
+def get_img_route():  # pylint: disable=missing-function-docstring
+    title, img_data = get_img()
+    res = {"title": title, "img_data": img_data}
+    return res
 
 
 if __name__ == "__main__":

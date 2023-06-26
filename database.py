@@ -6,12 +6,14 @@ Returns:
 import os
 import urllib.parse
 import psycopg
-
+import base64
 from dotenv import dotenv_values
+import sys
 
 os.chdir(os.path.dirname(__file__))
-
-if os.path.exists(".env"):
+if sys.argv[1] == "--site" or sys.argv[0] == "--site":
+    config = dotenv_values("site.env")
+elif os.path.exists(".env"):
     config = dotenv_values(".env")
 else:
     config = {
@@ -39,3 +41,24 @@ def get_data():  # pylint: disable=missing-function-docstring
         with conn.cursor() as cur:
             cur.execute("select * from data;")
             return cur.fetchall()
+
+
+def get_img():  # pylint: disable=missing-function-docstring
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            cur.execute("select title,img_data from img_data;")
+            title, img_data = cur.fetchone()
+            img_data = img_data.decode("utf-8")
+            return (title, img_data)
+
+
+if __name__ == "__main__":
+    reset_table()
+    with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
+        with conn.cursor() as cur:
+            # Insert an image into the table
+            image_data = base64.b64encode(open("media/voiture.jpg", "rb").read())
+            cur.execute(
+                "INSERT INTO img_data (title,img_data) VALUES (%(title)s,%(byte)s)",
+                {"title": "voiture", "byte": image_data},
+            )
