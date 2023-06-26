@@ -11,8 +11,16 @@ from dotenv import dotenv_values
 
 os.chdir(os.path.dirname(__file__))
 
-if os.path.exists(".env"):
-    config = dotenv_values(".env")
+default_look_filename = ".env"
+
+if __name__ == "__main__":
+    import sys
+
+    if sys.argv[0] == "--site" or sys.argv[1] == "--site":
+        default_look_filename = "site.env"
+
+if os.path.exists(default_look_filename):
+    config = dotenv_values(default_look_filename)
 else:
     config = {
         "USER": os.environ.get("USER_DB"),
