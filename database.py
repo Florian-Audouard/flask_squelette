@@ -53,7 +53,7 @@ def get_img():  # pylint: disable=missing-function-docstring
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute("select img_title,img_data,img_type from img_data;")
-            img_title, img_data, img_type = cur.fetchone()
+            img_title, img_data, img_type = cur.fetchall()[0]
             img_data = img_data.decode("utf-8")
             return (img_title, img_data, img_type)
 
@@ -62,7 +62,7 @@ def get_video():  # pylint: disable=missing-function-docstring
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute("select video_title,video_data,video_type from video_data;")
-            video_title, video_data, video_type = cur.fetchone()
+            video_title, video_data, video_type = cur.fetchall()[0]
             video_data = video_data.decode("utf-8")
             return (video_title, video_data, video_type)
 
@@ -71,7 +71,7 @@ def get_music():  # pylint: disable=missing-function-docstring
     with psycopg.connect(CONN_PARAMS) as conn:  # pylint: disable=not-context-manager
         with conn.cursor() as cur:
             cur.execute("select music_title,music_data,music_type from music_data;")
-            music_title, music_data, music_type = cur.fetchone()
+            music_title, music_data, music_type = cur.fetchall()[0]
             music_data = music_data.decode("utf-8")
             return (music_title, music_data, music_type)
 
